@@ -105,9 +105,7 @@ Stack initStack(char *val) {
 }
 
 int isEmptyStack(Stack stack) {
-	if (stack == NULL)
-		return 1;
-	if (stack->top == NULL)
+	if (stack == NULL || stack->top == NULL)
 		return 1;
 	if (stack->size > 0)
 		return 0;
@@ -173,9 +171,7 @@ Queue initQueue(char *val) {
 }
 
 int isEmptyQueue(Queue queue) {
-	if (queue == NULL)
-		return 1;
-	if (queue->tail == NULL)
+	if (queue == NULL || queue->tail == NULL)
 		return 1;
 	if (queue->size > 0)
 		return 0;
@@ -246,26 +242,26 @@ void readText(TextBeginning *t, Stack *st) {
 }
 
 int readCommands(Stack *st, Queue qu, int *commands_cnt) {
-	char input[100]; int redo = 0;
+	char input[100], Q = 'q', U = 'u', R = 'r'; int redo = 0;
 	fgets(input, 100, stdin);
 	input[strlen(input) - 1] = '\0';
 	while (1) {
 		switch(input[0]) {
-			case 'q':
+			case Q:
 				if ((*commands_cnt) == 4)
 					return 2;
 				else
 					return 1;
 			case ':':
 				return 0;
-			case 'u':
+			case U:
 				if (strcmp(top(*st), "s") != 0 && !isEmptyStack(*st)) {
 					qu = enqueue(qu, top(*st));
 					*st = pop(*st);
 				}
 				redo = 1;
 				break;
-			case 'r':
+			case R:
 				if (redo && !isEmptyQueue(qu)) {
 					*st = push(*st, first(qu));
 					qu = dequeue(qu);
@@ -409,7 +405,7 @@ Symbol backspace(Symbol s, Cursor *c) {
 
 Symbol deleteLine(Symbol s, int nr) {
 	Symbol temp = NULL, to_delete; int i = 1;
-	if (nr > 1)
+	if (nr >= 2)
 		temp = s;
 	while (i < nr) {
 		if (s->character == '\n')
